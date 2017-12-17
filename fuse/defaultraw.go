@@ -154,3 +154,7 @@ func (fs *defaultRawFileSystem) FsyncDir(input *FsyncIn) (code Status) {
 func (fs *defaultRawFileSystem) Fallocate(in *FallocateIn) (code Status) {
 	return ENOSYS
 }
+
+func (fs *defaultRawFileSystem) Poll(in *PollIn, out *PollOut) (code Status) {
+	return ENOSYS
+}

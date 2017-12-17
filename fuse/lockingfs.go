@@ -213,3 +213,8 @@ func (fs *lockingRawFileSystem) String() string {
 	defer fs.locked()()
 	return fmt.Sprintf("Locked(%s)", fs.RawFS.String())
 }
+
+func (fs *lockingRawFileSystem) Poll(input *PollIn, out *PollOut) (code Status) {
+	defer fs.locked()()
+	return fs.RawFS.Poll(input, out)
+}

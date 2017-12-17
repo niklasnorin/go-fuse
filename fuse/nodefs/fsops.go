@@ -485,3 +485,7 @@ func (c *rawBridge) Flush(input *fuse.FlushIn) fuse.Status {
 	}
 	return fuse.OK
 }
+
+func (c *rawBridge) Poll(input *fuse.PollIn, out *fuse.PollOut) fuse.Status {
+	return fuse.ENOSYS
+}

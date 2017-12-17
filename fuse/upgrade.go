@@ -331,3 +331,12 @@ func (fs *wrappingFS) Fallocate(in *FallocateIn) (code Status) {
 	}
 	return ENOSYS
 }
+
+func (fs *wrappingFS) Poll(input *PollIn, out *PollOut) (code Status) {
+	if s, ok := fs.fs.(interface {
+		Poll(input *PollIn, out *PollOut) (code Status)
+	}); ok {
+		return s.Poll(input, out)
+	}
+	return ENOSYS
+}

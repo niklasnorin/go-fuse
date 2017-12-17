@@ -141,6 +141,8 @@ type RawFileSystem interface {
 	//
 	StatFs(input *InHeader, out *StatfsOut) (code Status)
 
+	Poll(input *PollIn, out *PollOut) (code Status)
+
 	// This is called on processing the first request. The
 	// filesystem implementation can use the server argument to
 	// talk back to the kernel (through notify methods).

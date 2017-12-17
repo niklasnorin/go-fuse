@@ -382,6 +382,18 @@ func doIoctl(server *Server, req *request) {
 	req.status = ENOSYS
 }
 
+func doPoll(server *Server, req *request) {
+	//in := (*PollIn)(req.inData)
+	out := (*PollOut)(req.outData())
+	//req.status = server.fileSystem.Poll(in, out)
+	log.Print("opcode.go - doPoll")
+	// TODO: Remove temporary
+	*out = PollOut{
+		Revents: 0,
+	}
+	req.status = OK
+}
+
 func doDestroy(server *Server, req *request) {
 	req.status = OK
 }
@@ -462,7 +474,7 @@ func init() {
 		_OP_INTERRUPT:    unsafe.Sizeof(InterruptIn{}),
 		_OP_BMAP:         unsafe.Sizeof(_BmapIn{}),
 		_OP_IOCTL:        unsafe.Sizeof(_IoctlIn{}),
-		_OP_POLL:         unsafe.Sizeof(_PollIn{}),
+		_OP_POLL:         unsafe.Sizeof(PollIn{}),
 		_OP_FALLOCATE:    unsafe.Sizeof(FallocateIn{}),
 		_OP_READDIRPLUS:  unsafe.Sizeof(ReadIn{}),
 	} {
@@ -487,7 +499,7 @@ func init() {
 		_OP_CREATE:        unsafe.Sizeof(CreateOut{}),
 		_OP_BMAP:          unsafe.Sizeof(_BmapOut{}),
 		_OP_IOCTL:         unsafe.Sizeof(_IoctlOut{}),
-		_OP_POLL:          unsafe.Sizeof(_PollOut{}),
+		_OP_POLL:          unsafe.Sizeof(PollOut{}),
 		_OP_NOTIFY_ENTRY:  unsafe.Sizeof(NotifyInvalEntryOut{}),
 		_OP_NOTIFY_INODE:  unsafe.Sizeof(NotifyInvalInodeOut{}),
 		_OP_NOTIFY_DELETE: unsafe.Sizeof(NotifyInvalDeleteOut{}),
@@ -577,6 +589,7 @@ func init() {
 		_OP_RENAME:       doRename,
 		_OP_STATFS:       doStatFs,
 		_OP_IOCTL:        doIoctl,
+		_OP_POLL:         doPoll,
 		_OP_DESTROY:      doDestroy,
 		_OP_FALLOCATE:    doFallocate,
 		_OP_READDIRPLUS:  doReadDirPlus,
@@ -600,6 +613,7 @@ func init() {
 		_OP_NOTIFY_DELETE: func(ptr unsafe.Pointer) interface{} { return (*NotifyInvalDeleteOut)(ptr) },
 		_OP_STATFS:        func(ptr unsafe.Pointer) interface{} { return (*StatfsOut)(ptr) },
 		_OP_SYMLINK:       func(ptr unsafe.Pointer) interface{} { return (*EntryOut)(ptr) },
+		_OP_POLL:          func(ptr unsafe.Pointer) interface{} { return (*PollOut)(ptr) },
 	} {
 		operationHandlers[op].DecodeOut = f
 	}
@@ -628,6 +642,7 @@ func init() {
 		_OP_FALLOCATE:    func(ptr unsafe.Pointer) interface{} { return (*FallocateIn)(ptr) },
 		_OP_READDIRPLUS:  func(ptr unsafe.Pointer) interface{} { return (*ReadIn)(ptr) },
 		_OP_RENAME:       func(ptr unsafe.Pointer) interface{} { return (*RenameIn)(ptr) },
+		_OP_POLL:         func(ptr unsafe.Pointer) interface{} { return (*PollIn)(ptr) },
 	} {
 		operationHandlers[op].DecodeIn = f
 	}

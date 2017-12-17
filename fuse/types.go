@@ -279,7 +279,7 @@ type _IoctlOut struct {
 	OutIovs uint32
 }
 
-type _PollIn struct {
+type PollIn struct {
 	InHeader
 	Fh      uint64
 	Kh      uint64
@@ -287,7 +287,7 @@ type _PollIn struct {
 	Padding uint32
 }
 
-type _PollOut struct {
+type PollOut struct {
 	Revents uint32
 	Padding uint32
 }
