@@ -212,6 +212,10 @@ func (f *loopbackFile) GetAttr(a *fuse.Attr) fuse.Status {
 	return fuse.OK
 }
 
+func (f *loopbackFile) Poll() (revents uint32, code fuse.Status) {
+	return 0, fuse.ENOSYS
+}
+
 // Utimens implemented in files_linux.go
 
 // Allocate implemented in files_linux.go
@@ -258,4 +262,8 @@ func (f *readOnlyFile) Chown(uid uint32, gid uint32) fuse.Status {
 
 func (f *readOnlyFile) Allocate(off uint64, sz uint64, mode uint32) fuse.Status {
 	return fuse.EPERM
+}
+
+func (f *readOnlyFile) Poll() (revents uint32, code fuse.Status) {
+	return 0, fuse.ENOSYS
 }

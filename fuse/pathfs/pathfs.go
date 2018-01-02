@@ -745,3 +745,10 @@ func (n *pathInode) Write(file nodefs.File, data []byte, off int64, context *fus
 	}
 	return 0, fuse.ENOSYS
 }
+
+func (n *pathInode) Poll(file nodefs.File, context *fuse.Context) (revents uint32, code fuse.Status) {
+	if file != nil {
+		return file.Poll()
+	}
+	return 0, fuse.ENOSYS
+}

@@ -107,3 +107,9 @@ func (f *lockingFile) Allocate(off uint64, size uint64, mode uint32) (code fuse.
 	defer f.mu.Unlock()
 	return f.file.Allocate(off, size, mode)
 }
+
+func (f *lockingFile) Poll() (revents uint32, code fuse.Status) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.file.Poll()
+}

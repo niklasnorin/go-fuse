@@ -383,15 +383,11 @@ func doIoctl(server *Server, req *request) {
 }
 
 func doPoll(server *Server, req *request) {
-	//in := (*PollIn)(req.inData)
+	// In probably doesn't contain any "events" that we're interested in
+	// because fuse will filter on that when returning `revents`
+	in := (*PollIn)(req.inData)
 	out := (*PollOut)(req.outData())
-	//req.status = server.fileSystem.Poll(in, out)
-	log.Print("opcode.go - doPoll")
-	// TODO: Remove temporary
-	*out = PollOut{
-		Revents: 0,
-	}
-	req.status = OK
+	req.status = server.fileSystem.Poll(in, out)
 }
 
 func doDestroy(server *Server, req *request) {

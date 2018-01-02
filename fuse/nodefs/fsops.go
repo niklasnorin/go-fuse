@@ -10,7 +10,8 @@ package nodefs
 import (
 	"bytes"
 	"fmt"
-	"log"
+	//"log"
+	log "github.com/Sirupsen/logrus"
 	"strings"
 	"time"
 
@@ -487,5 +488,17 @@ func (c *rawBridge) Flush(input *fuse.FlushIn) fuse.Status {
 }
 
 func (c *rawBridge) Poll(input *fuse.PollIn, out *fuse.PollOut) fuse.Status {
-	return fuse.ENOSYS
+	header := &input.InHeader
+	node := c.toInode(header.NodeId)
+
+	opened := node.mount.getOpenedFile(input.Fh)
+	var f File
+	if opened != nil {
+		f = opened.WithFlags.File
+	}
+
+	log.Info("fsops.go - Poll - Calling Poll on file...")
+	revents, status := node.Node().Poll(f, &header.Context)
+	out.Revents = revents
+	return status
 }

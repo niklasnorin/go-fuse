@@ -111,6 +111,8 @@ type Node interface {
 	Fallocate(file File, off uint64, size uint64, mode uint32, context *fuse.Context) (code fuse.Status)
 
 	StatFs() *fuse.StatfsOut
+
+	Poll(file File, context *fuse.Context) (revents uint32, code fuse.Status)
 }
 
 // A File object is returned from FileSystem.Open and
@@ -152,6 +154,8 @@ type File interface {
 	Chmod(perms uint32) fuse.Status
 	Utimens(atime *time.Time, mtime *time.Time) fuse.Status
 	Allocate(off uint64, size uint64, mode uint32) (code fuse.Status)
+
+	Poll() (revents uint32, code fuse.Status)
 }
 
 // Wrap a File return in this to set FUSE flags.  Also used internally

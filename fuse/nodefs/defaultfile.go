@@ -73,3 +73,7 @@ func (f *defaultFile) Chmod(perms uint32) fuse.Status {
 func (f *defaultFile) Allocate(off uint64, size uint64, mode uint32) (code fuse.Status) {
 	return fuse.ENOSYS
 }
+
+func (f *defaultFile) Poll() (revents uint32, code fuse.Status) {
+	return 0, fuse.ENOSYS
+}

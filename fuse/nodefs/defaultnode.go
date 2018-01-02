@@ -170,3 +170,10 @@ func (n *defaultNode) Write(file File, data []byte, off int64, context *fuse.Con
 	}
 	return 0, fuse.ENOSYS
 }
+
+func (n *defaultNode) Poll(file File, context *fuse.Context) (revents uint32, code fuse.Status) {
+	if file != nil {
+		return file.Poll()
+	}
+	return 0, fuse.ENOSYS
+}
